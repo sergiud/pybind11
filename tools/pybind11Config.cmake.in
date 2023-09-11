@@ -225,9 +225,16 @@ set_target_properties(pybind11::headers PROPERTIES INTERFACE_LINK_LIBRARIES
 
 include("${CMAKE_CURRENT_LIST_DIR}/pybind11Common.cmake")
 
-if(NOT pybind11_FIND_QUIETLY)
-  message(
-    STATUS
-      "Found pybind11: ${pybind11_INCLUDE_DIR} (found version \"${pybind11_VERSION}${pybind11_VERSION_TYPE}\")"
-  )
-endif()
+include(FindPackageHandleStandardArgs)
+
+set(_pybind11_VERSION ${pybind11_VERSION}${pybind11_VERSION_TYPE})
+
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.19)
+  list(APPEND _MORE_FPHSA_ARGS HANDLE_VERSION_RANGE)
+endif(CMAKE_VERSION VERSION_GREATER_EQUAL 3.19)
+
+find_package_handle_standard_args(pybind11
+  ${_MORE_FPHSA_ARGS}
+  REQUIRED_VARS pybind11_INCLUDE_DIR
+  VERSION_VAR _pybind11_VERSION
+)
